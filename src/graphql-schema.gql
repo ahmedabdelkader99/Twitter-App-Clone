@@ -1,0 +1,88 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserFollowingEntity {
+  id: Float!
+  followerId: Float!
+  followeeId: Float!
+}
+
+type Profile {
+  id: Float!
+  bio: String!
+  avatar: String!
+  userId: Float!
+  tweetId: Float!
+  user: User!
+}
+
+type User {
+  id: Float!
+  name: String!
+  email: String!
+  password: String!
+  react: [React]!
+  tweets: [Tweet!]
+  user: Profile
+  followers: [User!]
+  follwing: [User!]
+}
+
+type React {
+  id: Int!
+  user_Id: Int!
+  tweet_Id: Int!
+}
+
+type Tweet {
+  id: Float!
+  content: String!
+  userId: Float!
+  user: User!
+  react: [React]!
+}
+
+type UserToken {
+  token: String!
+}
+
+type Query {
+  findAllUsers(page: Float!): [User!]!
+  findUserTweets: User!
+  getuserfolllwers: User!
+  getuserfolllwing: User!
+  findAllTweets(page: Float!): [Tweet!]!
+}
+
+type Mutation {
+  followUser(followCreateDto: FollowCreateDto!): UserFollowingEntity!
+  createTweet(createTweetInputs: CreateTweetDto!): Tweet!
+  register(user: UserCreateDto!): UserToken!
+  login(user: UserLoginDto!): UserToken!
+  createProfile(createProfileInput: CreateProfileInput!): Profile!
+}
+
+input FollowCreateDto {
+  followeeId: Float!
+}
+
+input CreateTweetDto {
+  content: String!
+}
+
+input UserCreateDto {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input UserLoginDto {
+  email: String!
+  password: String!
+}
+
+input CreateProfileInput {
+  bio: String!
+  avatar: String!
+}
