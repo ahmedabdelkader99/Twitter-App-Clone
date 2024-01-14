@@ -1,18 +1,15 @@
 import { InjectModel } from "@nestjs/sequelize";
 import { Tweet } from "src/tweet/entities/tweet.entity";
-import { FollowCreateDto } from "./dto/create-follow-user.dto";
-import { UserFollowingEntity } from "./entities/user-followings.entity";
+
 import { perPage } from "src/auth/constants";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { User } from "./entities/user.entity";
+import { User, UserProfile } from "./entities/user.entity";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User)
-    private userModel: typeof User,
-    @InjectModel(UserFollowingEntity)
-    private UserFollowingmodel: typeof UserFollowingEntity
+    private userModel: typeof User
   ) {}
 
   async createUser(
@@ -35,6 +32,14 @@ export class UserService {
     }
     return user;
   }
+  async getUserprofile(name: string): Promise<User> {
+    const user = this.userModel.findOne({ where: { name: name } });
+    if (!user) {
+      const error = new Error("user not found");
+      throw error;
+    }
+    return user;
+  }
 
   async findAllUsers(page: number): Promise<User[]> {
     const offset = (page - 1) * perPage;
@@ -50,44 +55,5 @@ export class UserService {
       include: [Tweet], // association between User and Tweet models
     });
     return this.userModel.findOne({ where: { id: user.id }, include: [Tweet] });
-  }
-  async createUserFollowRelation(followCreateDto: FollowCreateDto, user: User) {
-    const { followeeId } = followCreateDto;
-
-    // Find the user to be followed (followee) based on followeeId
-    const followee = await this.userModel.findOne({
-      where: { id: followeeId },
-    });
-    // Check if the followee exists
-    if (!followee) {
-      throw new NotFoundException("User not found id: " + followeeId);
-    }
-    // Create a follow relationship in the UserFollowingmodel
-    return await this.UserFollowingmodel.create({
-      followerId: user.id,
-      followeeId: followeeId,
-    });
-  }
-  async getuserfolllwers(user: User): Promise<User> {
-    const folllwerscount = await this.userModel.count({
-      where: { id: user.id },
-      include: [{ model: User, as: "followers" }],
-    });
-
-    return this.userModel.findOne({
-      where: { id: user.id },
-      include: [{ model: User, as: "followers" }],
-    });
-  }
-
-  async getuserfolllwing(user: User): Promise<User> {
-    const folllwingcount = await this.userModel.count({
-      where: { id: user.id },
-      include: [{ model: User, as: "follwing" }],
-    });
-    return this.userModel.findOne({
-      where: { id: user.id },
-      include: [{ model: User, as: "follwing" }],
-    });
   }
 }

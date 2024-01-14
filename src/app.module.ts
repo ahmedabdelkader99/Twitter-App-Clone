@@ -6,11 +6,11 @@ import { TweetModule } from "./tweet/tweet.module";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { User } from "./user/entities/user.entity";
 import { Tweet } from "./tweet/entities/tweet.entity";
-import { UserFollowingEntity } from "./user/entities/user-followings.entity";
 import { AuthModule } from "./auth/auth.module";
 import { React } from "./likeReact/react.entity";
-import { ProfileModule } from "./profile/profile.module";
-import { Profile } from "./profile/entities/profile.entity";
+
+import { FollowModule } from "./follow/follow.module";
+import { UserFollowingEntity } from "./follow/entities/follow.entity";
 
 @Module({
   imports: [
@@ -26,12 +26,13 @@ import { Profile } from "./profile/entities/profile.entity";
       username: "postgres",
       password: "0000",
       database: "twitter",
-      models: [User, Tweet, UserFollowingEntity, React, Profile],
+      models: [User, Tweet, UserFollowingEntity, React],
       autoLoadModels: true,
       synchronize: true,
     }),
     AuthModule,
-    ProfileModule,
+    FollowModule,
+    TweetModule,
   ],
 })
 export class AppModule {}

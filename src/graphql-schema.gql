@@ -8,23 +8,14 @@ type UserFollowingEntity {
   followeeId: Float!
 }
 
-type Profile {
-  id: Float!
-  bio: String!
-  avatar: String!
-  userId: Float!
-  tweetId: Float!
-  user: User!
-}
-
 type User {
   id: Float!
   name: String!
   email: String!
   password: String!
+  bio: String!
   react: [React]!
   tweets: [Tweet!]
-  user: Profile
   followers: [User!]
   follwing: [User!]
 }
@@ -48,23 +39,20 @@ type UserToken {
 }
 
 type Query {
+  findUserProfile: [User!]!
   findAllUsers(page: Float!): [User!]!
   findUserTweets: User!
-  getuserfolllwers: User!
-  getuserfolllwing: User!
   findAllTweets(page: Float!): [Tweet!]!
+  getFolllwers: User!
+  getFolllwing: User!
 }
 
 type Mutation {
-  followUser(followCreateDto: FollowCreateDto!): UserFollowingEntity!
   createTweet(createTweetInputs: CreateTweetDto!): Tweet!
+  getAllTweetsByUserId(userId: Float!): Tweet!
   register(user: UserCreateDto!): UserToken!
   login(user: UserLoginDto!): UserToken!
-  createProfile(createProfileInput: CreateProfileInput!): Profile!
-}
-
-input FollowCreateDto {
-  followeeId: Float!
+  followUser(createFollowInput: CreateFollowInput!): UserFollowingEntity!
 }
 
 input CreateTweetDto {
@@ -82,7 +70,6 @@ input UserLoginDto {
   password: String!
 }
 
-input CreateProfileInput {
-  bio: String!
-  avatar: String!
+input CreateFollowInput {
+  followeeId: Float!
 }

@@ -1,11 +1,9 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { FollowCreateDto } from './dto/create-follow-user.dto';
-import { UserFollowingEntity } from './entities/user-followings.entity';
-import { User } from './entities/user.entity';
-import { UserService } from './user.service';
-import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guards';
-import { CurrentUser } from 'src/user/decorator/current-user.decorator';
-import { UseGuards } from '@nestjs/common/decorators/core/use-guards.decorator';
+import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
+import { User, UserProfile } from "./entities/user.entity";
+import { UserService } from "./user.service";
+import { GqlAuthGuard } from "src/auth/guards/gql-auth.guards";
+import { CurrentUser } from "src/user/decorator/current-user.decorator";
+import { UseGuards } from "@nestjs/common/decorators/core/use-guards.decorator";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -13,7 +11,13 @@ export class UserResolver {
 
   @Query(() => [User])
   @UseGuards(GqlAuthGuard)
-  findAllUsers(@CurrentUser() user, @Args('page') page: number) {
+  findUserProfile(@CurrentUser() user,) {
+    return this.userService.getUserprofile(user);
+  }
+
+  @Query(() => [User])
+  @UseGuards(GqlAuthGuard)
+  findAllUsers(@CurrentUser() user, @Args("page") page: number) {
     return this.userService.findAllUsers(page);
   }
 
@@ -22,26 +26,5 @@ export class UserResolver {
   @UseGuards(GqlAuthGuard)
   findUserTweets(@CurrentUser() user) {
     return this.userService.findUserTweets(user);
-  }
-
-  @UseGuards(GqlAuthGuard)
-  @Mutation(() => UserFollowingEntity)
-  followUser(
-    @CurrentUser() user,
-    @Args('followCreateDto') followCreateDto: FollowCreateDto,
-  ) {
-    return this.userService.createUserFollowRelation(followCreateDto, user);
-  }
-
-  
-  @UseGuards(GqlAuthGuard)
-  @Query(() => User)
-  getuserfolllwers(@CurrentUser() user) {
-    return this.userService.getuserfolllwers(user);
-  }
-  @UseGuards(GqlAuthGuard)
-  @Query(() => User)
-  getuserfolllwing(@CurrentUser() user) {
-    return this.userService.getuserfolllwing(user);
   }
 }

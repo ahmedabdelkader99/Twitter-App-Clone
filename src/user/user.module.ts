@@ -5,10 +5,9 @@ import { User } from './entities/user.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { UserFollowingEntity } from './entities/user-followings.entity';
 
 @Module({
-  imports: [SequelizeModule.forFeature([User,UserFollowingEntity])
+  imports: [SequelizeModule.forFeature([User])
     ,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({

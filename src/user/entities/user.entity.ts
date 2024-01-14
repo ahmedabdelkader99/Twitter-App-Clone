@@ -1,20 +1,33 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import {
   AutoIncrement,
   BelongsToMany,
   Column,
+  DataType,
   HasMany,
-  HasOne,
   Model,
   PrimaryKey,
   Table,
+  Unique,
+  Validate,
 } from "sequelize-typescript";
 import { Tweet } from "src/tweet/entities/tweet.entity";
-import { UserFollowingEntity } from "./user-followings.entity";
 import { React } from "src/likeReact/react.entity";
-import { profile } from "console";
-import { Profile } from "src/profile/entities/profile.entity";
+import { UserFollowingEntity } from "src/follow/entities/follow.entity";
 
+@ObjectType()
+export class UserProfile {
+  @Field(() => ID)
+  id: number;
+
+  @Field()
+  displayName: string;
+
+  @Field({ nullable: true })
+  bio?: string;
+
+  // Add any other profile-related fields as needed
+}
 @ObjectType()
 @Table
 export class User extends Model {
@@ -26,12 +39,17 @@ export class User extends Model {
   @Field()
   @Column
   name: string;
+  @Validate({ isEmail: true })
+  @Unique
+  @Column(DataType.STRING)
   @Field()
-  @Column({ unique: true })
   email: string;
   @Field()
   @Column
   password: string;
+  @Field()
+  @Column
+  bio: string;
 
   @HasMany(() => React, "user_Id")
   @Field((type) => [React], { nullable: "items" })
@@ -40,11 +58,6 @@ export class User extends Model {
   @HasMany(() => Tweet)
   @Field(() => [Tweet], { nullable: true })
   tweets: Tweet[];
-
-  @HasOne(() => Profile)
-  @Field(() => Profile, { nullable: true })
-  user: User;
-  profile: Profile;
 
   @BelongsToMany(
     () => User,
