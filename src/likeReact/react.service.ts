@@ -9,6 +9,6 @@ export class ReactService {
 
   async createReact(createReactInput: CreateReactInput): Promise<React> {
     // should be {...createReactInput}
-    return await this.reactModel.create(createReactInput);
+    return await this.reactModel.create({ ...createReactInput });
   }
 }

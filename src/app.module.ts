@@ -8,15 +8,33 @@ import { User } from "./user/entities/user.entity";
 import { Tweet } from "./tweet/entities/tweet.entity";
 import { AuthModule } from "./auth/auth.module";
 import { React } from "./likeReact/react.entity";
-
 import { FollowModule } from "./follow/follow.module";
 import { UserFollowingEntity } from "./follow/entities/follow.entity";
+import { DataloaderModule } from "./dataloader/dataloader.module";
+import { DataloaderService } from "./dataloader/dataloader.service";
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+
 
 @Module({
   imports: [
+    DataloaderModule,
     UserModule,
-    GraphQLModule.forRoot({
+    // GraphQLModule.forRoot({
+    //   autoSchemaFile: join(process.cwd(), "src/graphql-schema.gql"),
+    // }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), "src/graphql-schema.gql"),
+      imports: [DataloaderModule],
+      useFactory: (dataloaderService: DataloaderService) => {
+        return {
+          autoSchemaFile: true,
+          context: () => ({
+            loaders: dataloaderService.getLoaders(),
+          }),
+        };
+      },
+      inject: [DataloaderService],
     }),
     TweetModule,
     SequelizeModule.forRoot({

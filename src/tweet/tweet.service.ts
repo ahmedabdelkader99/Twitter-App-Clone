@@ -4,14 +4,13 @@ import { perPage } from "src/auth/constants";
 import { User } from "src/user/entities/user.entity";
 import { CreateTweetDto } from "./dto/create-tweet.dto";
 import { Tweet } from "./entities/tweet.entity";
-import { TweetLoader } from "src/dataloader/tweetLoader";
+import { where } from "sequelize";
 
 @Injectable()
 export class TweetService {
   constructor(
     @InjectModel(Tweet)
     private tweetModel: typeof Tweet,
-    private readonly tweetLoader: TweetLoader
   ) {}
 
   findAllTweets(page: number): Promise<Tweet[]> {
@@ -35,7 +34,24 @@ export class TweetService {
     }
     return createdTweet;
   }
-  getAllTweetsByUserId(userId: number): Promise<Tweet[]> {
-    return this.tweetLoader.load(userId);
+   async getAllTweetsByUserIds(userIds: number[]) {
+    return  await this.tweetModel.findAll({ where: {id: userIds}});
+  }
+
+
+  
+  async getUsersTweetsByBatch(
+    userIds:  number[],
+  ): Promise<(Tweet | any)[]> {
+    const tweets = await this.getAllTweetsByUserIds(userIds);
+    const mappedResults = this._mapResultToIds(userIds, tweets);
+    return mappedResults;
+  }
+
+  private _mapResultToIds(userIds: readonly number[], tweets: Tweet[]) {
+    return userIds.map(
+      (id) =>
+        tweets.filter((tweet: Tweet) => tweet.userId === id) || null,
+    );
   }
 }

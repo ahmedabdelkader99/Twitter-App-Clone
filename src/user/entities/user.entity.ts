@@ -5,6 +5,7 @@ import {
   Column,
   DataType,
   HasMany,
+  IsEmail,
   Model,
   PrimaryKey,
   Table,
@@ -14,6 +15,7 @@ import {
 import { Tweet } from "src/tweet/entities/tweet.entity";
 import { React } from "src/likeReact/react.entity";
 import { UserFollowingEntity } from "src/follow/entities/follow.entity";
+import { IsNotEmpty } from "class-validator";
 
 @ObjectType()
 export class UserProfile {
@@ -47,9 +49,6 @@ export class User extends Model {
   @Field()
   @Column
   password: string;
-  @Field()
-  @Column
-  bio: string;
 
   @HasMany(() => React, "user_Id")
   @Field((type) => [React], { nullable: "items" })

@@ -18,15 +18,15 @@ export class TweetResolver {
   ) {
     return this.tweetService.createTweet(createTweetInputs, user);
   }
-   @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard)
   @Query(() => [Tweet])
   findAllTweets(@Args("page") page: number) {
     return this.tweetService.findAllTweets(page);
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => Tweet)
-  async getAllTweetsByUserId(@Args("userId") userId: number) {
-    return this.tweetService.getAllTweetsByUserId(userId);
+  @Query(() => [Tweet])
+  getAllTweetsByUserId(@Args("userId") userId: number[]) {
+    return this.tweetService.getAllTweetsByUserIds(userId);
   }
 }
