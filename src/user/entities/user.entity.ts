@@ -35,7 +35,7 @@ export class UserProfile {
 export class User extends Model {
   @Field()
   @PrimaryKey
-  @AutoIncrement
+  @AutoIncrement //TODO: Use UUID FOR EVERY MODELS
   @Column
   id: number;
   @Field()
@@ -46,7 +46,8 @@ export class User extends Model {
   @Column(DataType.STRING)
   @Field()
   email: string;
-  @Field()
+
+   // NOTE: REMOVE FIELD AT PASSWORD TO PREVENT CLIENT ACCESS TO IT
   @Column
   password: string;
 

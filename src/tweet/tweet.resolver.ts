@@ -6,6 +6,7 @@ import { GqlAuthGuard } from "src/auth/guards/gql-auth.guards";
 import { CreateTweetDto } from "./dto/create-tweet.dto";
 import { Tweet } from "./entities/tweet.entity";
 import { TweetService } from "./tweet.service";
+import { Int } from "@nestjs/graphql";
 
 @Resolver(() => Tweet)
 export class TweetResolver {
@@ -20,13 +21,13 @@ export class TweetResolver {
   }
   @UseGuards(GqlAuthGuard)
   @Query(() => [Tweet])
-  findAllTweets(@Args("page") page: number) {
+  findAllTweets(@Args("page", { type: () => Int }) page: number) { //NOTE: YOU NEED TO SPECIFY THE TYPE IF IT"S NUMBER "INT"
     return this.tweetService.findAllTweets(page);
   }
 
   @UseGuards(GqlAuthGuard)
   @Query(() => [Tweet])
-  getAllTweetsByUserId(@Args("userId") userId: number[]) {
+  getAllTweetsByUserId(@Args("userId", { type: () => Int }) userId: number[]) { //NOTE: YOU NEED TO SPECIFY THE TYPE IF IT"S NUMBER "INT"
     return this.tweetService.getAllTweetsByUserIds(userId);
   }
 }

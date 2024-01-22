@@ -51,7 +51,7 @@ export class TweetService {
   private _mapResultToIds(userIds: readonly number[], tweets: Tweet[]) {
     return userIds.map(
       (id) =>
-        tweets.filter((tweet: Tweet) => tweet.userId === id) || null,
+        tweets.filter((tweet: Tweet) => tweet.userId === id) || null, //FIXME: this solution will only work fine for only one user if there is many users and the tweets is random the returned array would be mixed (not all users will have thier own tweets)
     );
   }
 }

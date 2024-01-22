@@ -22,9 +22,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     // GraphQLModule.forRoot({
     //   autoSchemaFile: join(process.cwd(), "src/graphql-schema.gql"),
     // }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({ // NOTE: use forRootAsync instead of forRoot
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), "src/graphql-schema.gql"),
       imports: [DataloaderModule],
       useFactory: (dataloaderService: DataloaderService) => {
         return {
@@ -37,16 +36,17 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       inject: [DataloaderService],
     }),
     TweetModule,
+    //TODO: use env file instead
     SequelizeModule.forRoot({
       dialect: "postgres",
       host: "localhost",
-      port: 4000,
+      port: 5432, //NOTE: default port for database is 5432
       username: "postgres",
       password: "0000",
       database: "twitter",
       models: [User, Tweet, UserFollowingEntity, React],
       autoLoadModels: true,
-      synchronize: true,
+      synchronize: true, // TODO: sync is not good for production. Use migration instead https://sequelize.org/docs/v6/other-topics/migrations/ 
     }),
     AuthModule,
     FollowModule,

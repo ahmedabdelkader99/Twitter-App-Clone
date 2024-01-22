@@ -8,5 +8,6 @@ import { SequelizeModule } from "@nestjs/sequelize";
   imports: [SequelizeModule.forFeature([Tweet])],
 
   providers: [TweetService, TweetResolver],
+  exports : [TweetService] // NOTE: make sure to export the service to use it in other modules
 })
 export class TweetModule {}

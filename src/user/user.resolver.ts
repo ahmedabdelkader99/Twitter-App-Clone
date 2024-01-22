@@ -36,7 +36,7 @@ export class UserResolver {
 
   @Query(() => [User])
   @UseGuards(GqlAuthGuard)
-  findAllUsers(@CurrentUser() user, @Args("page") page: number) {
+  findAllUsers(@CurrentUser() user, @Args("page") page: number) { // TODO: add also limit as arg as i can render whatever i want like i want to render only 9 or 10 etc
     return this.userService.findAllUsers(page);
   }
 
@@ -46,4 +46,6 @@ export class UserResolver {
   findUserTweets(@CurrentUser() user) {
     return this.userService.findUserTweets(user);
   }
+
+  //TODO: make resolve field for following count and follower count with dataloader
 }
