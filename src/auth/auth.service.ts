@@ -24,18 +24,23 @@ export class AuthService {
       const error = new Error("user exists already");
       throw error;
     }
-    const createdUser = this.usersService.createUser(
+
+    // NOTE: createUser was async so awit was needed and no need to assign for a variable
+
+    await this.usersService.createUser(
       name,
       email,
       hashedPassword
     );
 
+    // NOTE: generateToken was async so awit was needed
     return { token: this.generateToken(email) };
   }
 
-  async generateToken(email: string): Promise<string> {
+  generateToken(email: string): string {
     const payload: JwtPayLoad = { email };
-    const accessToken: string = await this.jwtService.sign({ payload });
+    // NOTE: Sign is sync so awit is not needed
+    const accessToken: string = this.jwtService.sign({ payload });
     return accessToken;
   }
   ///////

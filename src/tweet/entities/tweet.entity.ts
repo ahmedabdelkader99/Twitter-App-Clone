@@ -23,7 +23,7 @@ export class Tweet extends Model {
   id: number;
 
   @Field()
-  @Column
+  @Column //TODO: regular string is varchar(255) in DB so if the length is more than that it would failed use TEXT instead 
   content: string;
 
   @Field()

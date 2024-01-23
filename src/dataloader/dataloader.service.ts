@@ -19,7 +19,7 @@ export class DataloaderService {
   private _createTweetsLoader() {
     return new DataLoader<number, Tweet>(
       async (keys: readonly number[]) =>
-        await this.tweetService.getUsersTweetsByBatch(keys as number[])
+        await this.tweetService.getUsersTweetsByBatch(keys as number[]) // TODO : make a method inside the loader instead of injecting the service (to avoid circular dependecy)
     );
   }
 }

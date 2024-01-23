@@ -22,7 +22,7 @@ export class React extends Model {
 
   @ForeignKey(() => User)
   @Field((type) => Int)
-  user_Id: number;
+  user_Id: number;  // TODO: use only one naming convention "camelCase" 
 
   @ForeignKey(() => Tweet)
   @Field((type) => Int)
